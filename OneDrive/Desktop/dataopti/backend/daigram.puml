@@ -1,0 +1,85 @@
+@startuml
+skinparam style strictuml
+skinparam Monochrome true
+
+entity "Direct_Users" as users {
+  + id
+  --
+  email
+  role
+  created_at
+}
+
+entity "User_Tokens" as tokens {
+  + id
+  --
+  token
+  expires_at
+}
+
+entity "Audit_Logs" as audit {
+  + id
+  --
+  created_at
+  updated_at
+  action
+}
+
+entity "Datasets" as datasets {
+  + id
+  --
+  filename
+  file_format
+  file_size
+  upload_type
+}
+
+entity "Dataset_Profiles" as profiles {
+  + id
+  --
+  row_count
+  col_count
+  missing_count
+  duplicate_count
+  outlier_count
+  noise_level
+}
+
+entity "Preprocessing" as prep {
+  + id
+  --
+  imputation_strategy
+  scaling_type
+  encoding_type
+  feature_selection_method
+}
+
+entity "Candidate_Pipelines" as pipelines {
+  + id
+  --
+  pipeline_name
+  accuracy_score
+  f1_score
+  robustness_score
+  execution_time_ms
+  memory_mb
+  composite_fitness_score
+}
+
+entity "Optimized_Outputs" as outputs {
+  + id
+  --
+  joblib_path
+  clean_csv_path
+  export_date
+}
+
+users ||--o{ tokens : "Auth"
+users ||--|| audit : "Audits"
+users ||--o{ datasets : "Uploads"
+datasets ||--o{ profiles : "Profiles"
+profiles ||--o{ prep : "Evaluates"
+prep ||--o{ pipelines : "Optimizes"
+pipelines ||--|| outputs : "Generates"
+
+@enduml
